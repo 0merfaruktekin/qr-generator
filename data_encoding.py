@@ -1,4 +1,4 @@
-from capacity import QR_CAPACITY
+from tables import QR_CAPACITY,ALPHANUMERIC_TABLE
 def smallest_version(data,en_mode,er_mode):
     character_num=len(data)
     for i in range(40):
@@ -76,10 +76,10 @@ def numeric_encoding(data):
             temp=bin(int(item))
             index=temp.find("0")
             if index==0:
-                temp=bin(item)[7::1]
+                temp=bin(item)[2::1]
                 converted.append("0"*(7-len(temp))+temp)
             else:
-                temp=bin(int(item))[7::1]
+                temp=bin(int(item))[2::1]
                 converted.append("0"*(4-len(temp))+temp)
 
     for a in converted:
@@ -87,6 +87,31 @@ def numeric_encoding(data):
         
     return output
 
+def alphanumeric_encoding(data):
+    length=len(data)
+    pairs=[]
+    output=""
+    for i in range(0,length,2):
+        try:
+            pairs.append(data[i:i+2])
+        except:
+            pairs.append(data[i:i+1])
+    for pair in pairs:
+        if len(pair)==2:
+            first=ALPHANUMERIC_TABLE[pair[0]]
+            second=ALPHANUMERIC_TABLE[pair[1]]
+            first=first*45
+            result=first+second
+            result=bin(result)[2::1]
+            result="0"*(11-len(result))+result
+            
+            output+=result
+        else:
+            first=ALPHANUMERIC_TABLE[pair[0]]
+            result=bin(first)[2::1]
+            result="0"*(6-len(result))+result
+            output+=result
+    return output
 
 def encode_data(data,en_mode,er_mode):
     data_len=len(data)
@@ -97,4 +122,4 @@ def encode_data(data,en_mode,er_mode):
             encoded=numeric_encoding(data)
     return 0
 a=smallest_version("Hello Worlda",1,"L")
-print(numeric_encoding("8675309"))
+print(alphanumeric_encoding("HELLO WORLD"))
